@@ -1,17 +1,124 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html">
-      
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
 <h:head>
 
 </h:head>
 
 <h:body>
-
 	<h:form>
-		<h:outputLabel value="Olá JSF" />
+		<p:breadCrumb>
+			<p:menuitem/>
+			<p:menuitem value="Index" action="index.jsf"/>
+			<p:menuitem value="Cadastro" action="primefaces.jsf"/>
+		</p:breadCrumb>
+	</h:form>
+		
+	<h:form id="formCadastro">
+		<h:messages showDetail="true" showSummary="false" id="message"/>
+		
+		<h:panelGrid columns="2">
+			<h:outputLabel value="ID:" />
+			<h:inputText readonly="true"
+				value="#{usuarioPessoaManagedBean.usuarioPessoa.id}" />
+
+			<h:outputLabel value="Nome:" />
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.nome}" required="true" requiredMessage="Informe o Nome." />
+
+			<h:outputLabel value="Sobrenome" />
+			<h:inputText
+				value="#{usuarioPessoaManagedBean.usuarioPessoa.sobrenome}" />
+
+			<h:outputLabel value="E-mail:" />
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.email}" />
+
+			<h:outputLabel value="Sexo:" />
+			<h:selectOneMenu value="#{usuarioPessoaManagedBean.usuarioPessoa.genre}">
+				<f:selectItem itemValue="M" itemLabel="Masculino"/>
+				<f:selectItem itemValue="F" itemLabel="Feminino"/>
+			</h:selectOneMenu>
+
+			<h:outputLabel value="Idade:" />
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.idade}" />
+
+			<h:outputLabel value="Login:" />
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.login}" />
+
+			<h:outputLabel value="Senha:" />
+			<h:inputSecret
+				value="#{usuarioPessoaManagedBean.usuarioPessoa.senha}" />
+
+		</h:panelGrid>
+		<br/>
+
+		<h:commandLink action="#{usuarioPessoaManagedBean.salvar()}">
+			<h:graphicImage value="/resources/img/save.png" />
+		</h:commandLink>
+		
+		<h:outputLabel value=" "/>
+		
+		<h:commandLink action="#{usuarioPessoaManagedBean.novo()}">
+			<h:graphicImage value="/resources/img/new.png" />
+		</h:commandLink>
+	</h:form>
+	<br/>
+	<h:form id="formTableUsers">
+		<h:dataTable value="#{usuarioPessoaManagedBean.list}" var="user"
+			cellpadding="10" border="1" cellspacing="0">
+			<f:facet name="header">Lista de Usuários</f:facet>
+			<h:column>
+				<f:facet name="header">ID</f:facet>
+				<h:outputText value="#{user.id}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">Nome</f:facet>
+				<h:outputText value="#{user.nome}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">Sobrenome</f:facet>
+				<h:outputText value="#{user.sobrenome}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">E-mail</f:facet>
+				<h:outputText value="#{user.email}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">Sexo</f:facet>
+				<h:outputText value="#{user.genre}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">Idade</f:facet>
+				<h:outputText value="#{user.idade}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">Login</f:facet>
+				<h:outputText value="#{user.login}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">Ações</f:facet>
+				
+				<h:commandLink immediate="true" id="botaoeditar">
+					<h:graphicImage value="/resources/img/edit.png" />
+					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}" />
+					<f:ajax execute="botaoeditar" render="@form :formCadastro"/>
+				</h:commandLink>
+				|
+				<h:commandLink action="#{usuarioPessoaManagedBean.delete()}" immediate="true" id="botaoremover">
+					<h:graphicImage value="/resources/img/delete.png" />
+					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}" />
+					<f:ajax execute="botaoremover" render="@form :formCadastro :message"/>
+				</h:commandLink>
+				|
+				<h:commandLink action="telefone.jsf" id="botaophone">
+					<h:graphicImage value="/resources/img/phone.png" />
+					<f:param name="codigouser" value="#{user.id}"/>
+				</h:commandLink>
+			</h:column>
+		</h:dataTable>
 	</h:form>
 
 </h:body>

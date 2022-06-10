@@ -71,11 +71,16 @@ public class TesteHibernate {
 	
 	@Test
 	public void testeDelete() {
-		DaoGenerico<UsuarioPessoa> daoGenerico = new DaoGenerico<UsuarioPessoa>();
 		
-		UsuarioPessoa pessoa = daoGenerico.pesquisar(8L, UsuarioPessoa.class);
-		
-		daoGenerico.deletarPorId(pessoa);
+		try {
+			DaoGenerico<UsuarioPessoa> daoGenerico = new DaoGenerico<UsuarioPessoa>();
+			
+			UsuarioPessoa pessoa = daoGenerico.pesquisar(8L, UsuarioPessoa.class);
+			daoGenerico.deletarPorId(pessoa);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -95,7 +100,7 @@ public class TesteHibernate {
 	public void testeQueryList() {
 		DaoGenerico<UsuarioPessoa> daoGenerico = new DaoGenerico<UsuarioPessoa>();
 		
-		List<UsuarioPessoa> list = daoGenerico.geEntityManager().createQuery(" from UsuarioPessoa where nome = 'Wesley'").getResultList();
+		List<UsuarioPessoa> list = daoGenerico.getEntityManager().createQuery(" from UsuarioPessoa where nome = 'Wesley'").getResultList();
 		
 		for (UsuarioPessoa usuarioPessoa : list) {
 			System.out.println(usuarioPessoa);
@@ -108,7 +113,7 @@ public class TesteHibernate {
 	public void testeQueryListMaxResult() {
 		DaoGenerico<UsuarioPessoa> daoGenerico = new DaoGenerico<UsuarioPessoa>();
 		
-		List<UsuarioPessoa> list = daoGenerico.geEntityManager()
+		List<UsuarioPessoa> list = daoGenerico.getEntityManager()
 				.createQuery("from UsuarioPessoa order by nome")
 				.setMaxResults(2)
 				.getResultList();
@@ -124,7 +129,7 @@ public class TesteHibernate {
 	public void testeQueryListParameter() {
 		DaoGenerico<UsuarioPessoa> daoGenerico = new DaoGenerico<UsuarioPessoa>();
 		
-		List<UsuarioPessoa> list = daoGenerico.geEntityManager()
+		List<UsuarioPessoa> list = daoGenerico.getEntityManager()
 				.createQuery("from UsuarioPessoa where nome = :nome or sobrenome = :sobrenome")
 				.setParameter("nome", "Wesley")
 				.setParameter("sobrenome", "reis")
@@ -139,7 +144,7 @@ public class TesteHibernate {
 	public void testeQuerySomaIdade() {
 		DaoGenerico<UsuarioPessoa> daoGenerico = new DaoGenerico<UsuarioPessoa>();
 		
-		Long somaIdade = (Long) daoGenerico.geEntityManager()
+		Long somaIdade = (Long) daoGenerico.getEntityManager()
 				.createQuery("select sum(u.idade) from UsuarioPessoa u ").getSingleResult();
 		
 		System.out.println("A soma das idades é: " + somaIdade);
@@ -149,7 +154,7 @@ public class TesteHibernate {
 	public void testeQueryMediaIdade() {
 		DaoGenerico<UsuarioPessoa> daoGenerico = new DaoGenerico<UsuarioPessoa>();
 		
-		Double somaIdade = (Double) daoGenerico.geEntityManager()
+		Double somaIdade = (Double) daoGenerico.getEntityManager()
 				.createQuery("select avg(u.idade) from UsuarioPessoa u ").getSingleResult();
 		
 		System.out.println("A média da idade é: " + somaIdade);
@@ -159,7 +164,7 @@ public class TesteHibernate {
 	@Test
 	public void testeNamedQuery() {
 		DaoGenerico<UsuarioPessoa> daoGenerico = new DaoGenerico<UsuarioPessoa>();
-		List<UsuarioPessoa> list = daoGenerico.geEntityManager().createNamedQuery("UsuarioPessoa.findAll").getResultList();
+		List<UsuarioPessoa> list = daoGenerico.getEntityManager().createNamedQuery("UsuarioPessoa.findAll").getResultList();
 		
 		for (UsuarioPessoa usuarioPessoa : list) {
 			System.out.println(usuarioPessoa);
@@ -170,7 +175,7 @@ public class TesteHibernate {
 	@Test
 	public void testeNamedQueryNome() {
 		DaoGenerico<UsuarioPessoa> daoGenerico = new DaoGenerico<UsuarioPessoa>();
-		List<UsuarioPessoa> list = daoGenerico.geEntityManager().createNamedQuery("UsuarioPessoa.findName")
+		List<UsuarioPessoa> list = daoGenerico.getEntityManager().createNamedQuery("UsuarioPessoa.findName")
 				.setParameter("nome", "Maria Clara")
 				.getResultList();
 		

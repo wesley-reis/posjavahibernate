@@ -45,7 +45,7 @@ public class DaoGenerico<E> {
 		return e;
 	}
 	
-	public void deletarPorId(E entidade) {
+	public void deletarPorId(E entidade) throws Exception {
 		Object id = HibernateUtil.getPrimaryKey(entidade);
 		
 		EntityTransaction transaction = entityManager.getTransaction();
@@ -68,7 +68,7 @@ public class DaoGenerico<E> {
 		return lista;
 	}
 	
-	public EntityManager geEntityManager() {
+	public EntityManager getEntityManager() {
 		return entityManager;
 	}
 	
