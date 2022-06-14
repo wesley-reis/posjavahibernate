@@ -18,22 +18,62 @@
 		</p:breadCrumb>
 	</h:form>
 		
-	<h:form id="formCadastro">
+	<h:form id="formTelefones">
 		<h:messages showDetail="true" showSummary="false" id="message"/>
 		
 		<h:panelGrid columns="2">
 			
-			<h1>Telefones</h1>
+			<h:outputLabel value="Usuario: " />
 			<h:outputText value="#{telefoneManageBean.user.nome}" />
+			
+			<h:outputLabel value="ID " />
+			<h:inputText value="#{telefoneManageBean.telefone.id}"  readonly="true" />
+			
+			<h:outputLabel value="Número: " />
+			<h:inputText value="#{telefoneManageBean.telefone.numero}" />
+			
+			<h:outputLabel value="Tipo " />
+			<h:inputText value="#{telefoneManageBean.telefone.tipo}" />
 
 		</h:panelGrid>
 		<br/>
-
 		
+		<h:commandButton action="#{telefoneManageBean.salvar()}" value="Salvar" />
+		<h:commandButton action="#{telefoneManageBean.novo()}" value="Novo" />		
 	</h:form>
 	<br/>
 	<h:form id="formTableUsers">
-		
+		<h:dataTable value="#{telefoneManageBean.user.telefones}" var="fone"
+			cellpadding="10" border="1" cellspacing="0">
+			<f:facet name="header">Lista de Telefones</f:facet>
+			<h:column>
+				<f:facet name="header">ID</f:facet>
+				<h:outputText value="#{fone.id}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">Telefone</f:facet>
+				<h:outputText value="#{fone.numero}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">Tipo</f:facet>
+				<h:outputText value="#{fone.tipo}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">Ações</f:facet>
+				
+				<h:commandLink immediate="true" id="botaoeditar">
+					<h:graphicImage value="/resources/img/edit.png" />
+					<f:setPropertyActionListener value="#{fone}" target="#{telefoneManageBean.telefone}" />
+					<f:ajax execute="botaoeditar" render="@form :formTelefones"/>
+				</h:commandLink>
+				|
+				<h:commandLink action="#{telefoneManageBean.remove()}" immediate="true" id="botaoremover">
+					<h:graphicImage value="/resources/img/delete.png" />
+					<f:setPropertyActionListener value="#{fone}" target="#{telefoneManageBean.telefone}" />
+					<f:ajax execute="botaoremover" render="@form :formTelefones :message"/>
+				</h:commandLink>
+			</h:column>
+		</h:dataTable>
 	</h:form>
 
 </h:body>

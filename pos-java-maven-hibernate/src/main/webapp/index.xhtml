@@ -44,7 +44,29 @@
 
 			<h:outputLabel value="Idade:" />
 			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.idade}" />
-
+			
+			<h:outputLabel value="Cep:" />
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.cep}">
+				<f:ajax event="blur" execute="@this" render="logradouro complemento bairro localidade uf"
+				listener="#{usuarioPessoaManagedBean.pesquisaCep}"/>
+			</h:inputText>
+			
+			<h:outputLabel value="Rua:" />
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.logradouro}" id="logradouro" />
+			
+			<h:outputLabel value="Complemento:" />
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.complemento}" id="complemento" />
+			
+			<h:outputLabel value="Bairro:" />
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.bairro}" id="bairro" />
+						
+			<h:outputLabel value="Localidade:" />
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.localidade}" id="localidade" />
+			
+			<h:outputLabel value="UF:" />
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.uf}" id="uf" />
+			
+			
 			<h:outputLabel value="Login:" />
 			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.login}" />
 
