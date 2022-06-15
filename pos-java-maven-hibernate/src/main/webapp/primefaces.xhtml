@@ -10,51 +10,78 @@
 </h:head>
 
 <h:body>
-	<h:form id="formCadastro">
+	<h:form>
 		<p:breadCrumb>
 			<p:menuitem/>
-			<p:menuitem value="Index" action="index.jsf"/>
-			<p:menuitem value="Cadastro" action="primefaces.jsf"/>
+			<p:menuitem value="JSF" action="index.jsf"/>
+			<p:menuitem value="PrimeFaces" action="primefaces.jsf"/>
 		</p:breadCrumb>
 	</h:form>
 
-	<h:form>
-		<h:messages showDetail="true" showSummary="false" id="msg"/>
+	<h:form  id="formCadastro">
+		<p:messages id="msg" showDetail="true" closable="true">
+            <p:autoUpdate/>
+        </p:messages>
+		
 		<p:panelGrid columns="2">
-			<h:outputLabel value="ID:" />
+		
+			<p:outputLabel value="ID:" />
 			<p:inputText readonly="true"
 				value="#{usuarioPessoaManagedBean.usuarioPessoa.id}" />
+	
+			<p:outputLabel value="Nome:" />
+			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.nome}" id="nome" required="true" requiredMessage="Informe o Nome." />
 
-			<h:outputLabel value="Nome:" />
-			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.nome}" required="true" requiredMessage="Informe o Nome." />
-
-			<h:outputLabel value="Sobrenome" />
+			<p:outputLabel value="Sobrenome:" />
 			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.sobrenome}" />
 
-			<h:outputLabel value="E-mail:" />
-			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.email}" />
-
-			<h:outputLabel value="Sexo:" />
+			<p:outputLabel value="Sexo:" />
 			<p:selectOneMenu value="#{usuarioPessoaManagedBean.usuarioPessoa.genre}">
 				<f:selectItem itemValue="M" itemLabel="Masculino"/>
 				<f:selectItem itemValue="F" itemLabel="Feminino"/>
 			</p:selectOneMenu>
 
-			<h:outputLabel value="Idade:" />
+			<p:outputLabel value="Idade:" />
 			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.idade}" />
+			
+			<p:outputLabel value="Salário:" />
+			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.salario}" />
 
-			<h:outputLabel value="Login:" />
+			<p:outputLabel value="Cep:" />
+			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.cep}">
+				<f:ajax event="blur" execute="@this" render="logradouro complemento bairro localidade uf"
+				listener="#{usuarioPessoaManagedBean.pesquisaCep}"/>
+			</p:inputText>
+
+			<p:outputLabel value="Rua:" />
+			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.logradouro}" id="logradouro" />
+
+			<p:outputLabel value="Complemento:" />
+			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.complemento}" id="complemento" />
+
+			<p:outputLabel value="Bairro:" />
+			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.bairro}" id="bairro" />
+
+			<p:outputLabel value="Localidade:" />
+			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.localidade}" id="localidade" />
+
+			<p:outputLabel value="UF:" />
+			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.uf}" id="uf" />
+
+			<p:outputLabel value="Login:" />
 			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.login}" />
 
-			<h:outputLabel value="Senha:" />
+			<p:outputLabel value="Senha:" />
 			<p:password	value="#{usuarioPessoaManagedBean.usuarioPessoa.senha}" />
-
 		</p:panelGrid>
-
-		<p:commandButton action="#{usuarioPessoaManagedBean.salvar()}"
+		<br/>
+		<p:commandButton ajax="false" action="#{usuarioPessoaManagedBean.salvar()}"
 			value="Salvar" />
-		<p:commandButton action="#{usuarioPessoaManagedBean.novo()}"
-			value="Novo" />
+			<p:outputLabel value=" " />
+		<p:commandButton immediate="true" action="#{usuarioPessoaManagedBean.novo()}"
+			value="Novo">
+			<f:ajax execute="@this" render=":formCadastro"/>
+		</p:commandButton>
 	</h:form>
 	<br/>
 	<h:form id="formTable">
@@ -70,9 +97,6 @@
 			<p:column headerText="Sobrenome">
 				<h:outputText value="#{user.sobrenome}" />
 			</p:column>
-			<p:column headerText="E-mail">
-				<h:outputText value="#{user.email}" />
-			</p:column>
 			<p:column headerText="Sexo">
 				<h:outputText value="#{user.genre}" />
 			</p:column>
@@ -82,18 +106,40 @@
 			<p:column headerText="Login">
 				<h:outputText value="#{user.login}" />
 			</p:column>
-			<p:column headerText="Ações">
-				<p:commandLink value="Editar" immediate="true" id="botaoeditar">
+			<p:column headerText="Ações" style="width: 130px; display:flex; gap: 5px;">
+				<h:commandLink immediate="true" id="botaoeditar">
+					<h:graphicImage value="/resources/img/edit.png" />
+					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}" />	
+					<f:ajax execute="botaoeditar" render=":formCadastro"/>		
+				</h:commandLink>
+				
+				<h:commandLink action="#{usuarioPessoaManagedBean.delete()}" id="botaoremove">
+					<h:graphicImage value="/resources/img/delete.png" />
 					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}" />
-					<f:ajax execute="botaoeditar" render="@form :formCadasro :msg"/>
-				</p:commandLink> | 
-				<p:commandLink value="Deletar" action="#{usuarioPessoaManagedBean.delete()}" id="botaoremove">
+					<f:ajax execute="botaoremove" render=":formTable"/>	
+				</h:commandLink>
+				
+				<h:commandLink action="telefonePrimefaces.jsf" id="botaophone">
+					<h:graphicImage value="/resources/img/phone.png" />
+					<f:param name="codigouser" value="#{user.id}"/>
+				</h:commandLink>
+				
+				<p:commandLink update=":formTable:dialogEmail" oncomplete="PF('dialogEmail').show()" id="botaoemail">
+					<h:graphicImage value="/resources/img/email.png" />
 					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}" />
-					<f:ajax execute="botaoremove" render="@form :formCadasro :msg"/>
 				</p:commandLink>
+				
 			</p:column>
 		</p:dataTable>
+		
+		<!-- caixa de dialogo cadastro de e-mails  -->
+		<p:dialog header="E-mails" id="dialogEmail" widgetVar="dialogEmail" position="center" modal="true" width="490px" resizable="false">
+			<p:outputLabel value="#{usuarioPessoaManagedBean.usuarioPessoa.id}"/>
+		</p:dialog>
+		
 	</h:form>
+	
+	<p:barChart model="#{usuarioPessoaManagedBean.barChartModel}"/>
 
 </h:body>
 

@@ -18,7 +18,6 @@ public class TesteHibernate {
 		UsuarioPessoa pessoa = new UsuarioPessoa();
 		pessoa.setNome("Maria Clara");
 		pessoa.setSobrenome("reis");
-		pessoa.setEmail("maria@gmail.com");
 		pessoa.setLogin("maria");
 		pessoa.setSenha("123");
 		pessoa.setGenre("M");
@@ -58,7 +57,6 @@ public class TesteHibernate {
 		
 		pessoa.setNome("Wesley");
 		pessoa.setSobrenome("reis");
-		pessoa.setEmail("wesley@gmail.com");
 		pessoa.setLogin("wrr");
 		pessoa.setSenha("123");
 		pessoa.setGenre("M");

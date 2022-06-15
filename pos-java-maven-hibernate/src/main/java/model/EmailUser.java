@@ -11,17 +11,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Telefone {
+public class EmailUser {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	@Column(nullable = false)
-	private String tipo;
-	
-	@Column(nullable = false)
-	private String numero;
+	private String email;
 	
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private UsuarioPessoa usuarioPessoa;
@@ -43,25 +40,18 @@ public class Telefone {
 		this.id = id;
 	}
 
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
 
 	public String getNumero() {
-		return numero;
+		return email;
 	}
 
 	public void setNumero(String numero) {
-		this.numero = numero;
+		this.email = numero;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(email);
 	}
 
 	@Override
@@ -72,8 +62,8 @@ public class Telefone {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Telefone other = (Telefone) obj;
-		return Objects.equals(id, other.id);
+		EmailUser other = (EmailUser) obj;
+		return Objects.equals(email, other.email);
 	}
 	
 	

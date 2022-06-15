@@ -5,6 +5,7 @@
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<class>model.UsuarioPessoa</class>
 		<class>model.Telefone</class>
+		<class>model.EmailUser</class>
 		<!--
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/posjavahibernate?useTimezone=true&amp;serverTimezone=UTC"/>

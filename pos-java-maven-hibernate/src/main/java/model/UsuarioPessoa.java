@@ -1,8 +1,10 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,7 +25,6 @@ public class UsuarioPessoa {
 
 	private String nome;
 	private String sobrenome;
-	private String email;
 	private String login;
 	private String senha;
 	private String genre;
@@ -35,13 +36,37 @@ public class UsuarioPessoa {
 	private String localidade;
 	private String uf;
 	private String ddd;
+	private Double salario;
+	
+	
 
-	@OneToMany(mappedBy = "usuarioPessoa", fetch = FetchType.EAGER)
-	private List<Telefone> telefones;
+	@OneToMany(mappedBy = "usuarioPessoa", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Telefone> telefones = new ArrayList<Telefone>();
+	
+	@OneToMany(mappedBy = "usuarioPessoa", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<EmailUser> emails = new ArrayList<EmailUser>();
 
 	public List<Telefone> getTelefones() {
 		return telefones;
 	}
+
+	public void setEmails(List<EmailUser> emails) {
+		this.emails = emails;
+	}
+	
+	public List<EmailUser> getEmails() {
+		return emails;
+	}
+	
+	public Double getSalario() {
+		return salario;
+	}
+
+	public void setSalario(Double salario) {
+		this.salario = salario;
+	}
+
+
 
 	public void setTelefones(List<Telefone> telefones) {
 		this.telefones = telefones;
@@ -145,14 +170,6 @@ public class UsuarioPessoa {
 		this.sobrenome = sobrenome;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public String getLogin() {
 		return login;
 	}
@@ -171,7 +188,7 @@ public class UsuarioPessoa {
 
 	@Override
 	public String toString() {
-		return "UsuarioPessoa [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", email=" + email
+		return "UsuarioPessoa [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome 
 				+ ", login=" + login + ", senha=" + senha + ", genre=" + genre + ", idade=" + idade + "]";
 	}
 
