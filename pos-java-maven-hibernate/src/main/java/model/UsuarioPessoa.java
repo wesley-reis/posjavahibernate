@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -38,6 +39,9 @@ public class UsuarioPessoa {
 	private String ddd;
 	private Double salario;
 	
+	@Column(columnDefinition = "text")
+	private String image;
+	
 	
 
 	@OneToMany(mappedBy = "usuarioPessoa", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -58,6 +62,16 @@ public class UsuarioPessoa {
 		return emails;
 	}
 	
+	
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public Double getSalario() {
 		return salario;
 	}

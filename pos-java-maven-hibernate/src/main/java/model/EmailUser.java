@@ -12,17 +12,16 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class EmailUser {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@Column(nullable = false)
 	private String email;
-	
+
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private UsuarioPessoa usuarioPessoa;
-	
 
 	public UsuarioPessoa getUsuarioPessoa() {
 		return usuarioPessoa;
@@ -32,6 +31,14 @@ public class EmailUser {
 		this.usuarioPessoa = usuarioPessoa;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -39,7 +46,6 @@ public class EmailUser {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 
 	public String getNumero() {
 		return email;
@@ -65,7 +71,5 @@ public class EmailUser {
 		EmailUser other = (EmailUser) obj;
 		return Objects.equals(email, other.email);
 	}
-	
-	
 
 }

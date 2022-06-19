@@ -26,7 +26,9 @@ public class TelefoneManageBean {
 	@PostConstruct
 	public void init() {
 		String coduser = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("codigouser");
-		user = daoUsuario.pesquisar(Long.parseLong(coduser), UsuarioPessoa.class);
+		if(coduser != null) {			
+			user = daoUsuario.pesquisar(Long.parseLong(coduser), UsuarioPessoa.class);
+		}
 	}
 	
 	public String salvar() {

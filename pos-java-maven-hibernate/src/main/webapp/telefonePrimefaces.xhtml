@@ -19,7 +19,7 @@
 	</h:form>
 		
 	<h:form id="formTelefones">
-		<p:messages showDetail="true" showSummary="false" id="message"/>
+		<p:growl showDetail="true" showSummary="false" id="message"/>
 		
 		<h:panelGrid columns="2">
 			
@@ -30,10 +30,14 @@
 			<p:inputText value="#{telefoneManageBean.telefone.id}"  readonly="true" />
 			
 			<p:outputLabel value="Número: " />
-			<p:inputText value="#{telefoneManageBean.telefone.numero}" required="true" requiredMessage="número obrigatório"/>
+			<p:inputMask value="#{telefoneManageBean.telefone.numero}" required="true" requiredMessage="número obrigatório" mask="(99) 99999-9999" validateMask="true"/>
 			
 			<p:outputLabel value="Tipo " />
-			<p:inputText value="#{telefoneManageBean.telefone.tipo}" required="true" requiredMessage="tipo obrigatório"/>
+			<p:selectOneMenu value="#{telefoneManageBean.telefone.tipo}" required="true" requiredMessage="tipo obrigatório" style="width:200px;">
+				<f:selectItem  itemValue="RECADO" itemLabel="Recado"/>
+				<f:selectItem  itemValue="TRABALHO" itemLabel="Trabalho"/>
+				<f:selectItem  itemValue="CASA" itemLabel="Casa"/>
+			</p:selectOneMenu>
 
 		</h:panelGrid>
 		<br/>
@@ -61,13 +65,7 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">Ações</f:facet>
-				
-				<h:commandLink immediate="true" id="botaoeditar">
-					<h:graphicImage value="/resources/img/edit.png" />
-					<f:setPropertyActionListener value="#{fone}" target="#{telefoneManageBean.telefone}" />
-					<f:ajax execute="botaoeditar" render="@form :formTelefones"/>
-				</h:commandLink>
-				|
+	
 				<h:commandLink action="#{telefoneManageBean.remove()}" immediate="true" id="botaoremover">
 					<h:graphicImage value="/resources/img/delete.png" />
 					<f:setPropertyActionListener value="#{fone}" target="#{telefoneManageBean.telefone}" />
