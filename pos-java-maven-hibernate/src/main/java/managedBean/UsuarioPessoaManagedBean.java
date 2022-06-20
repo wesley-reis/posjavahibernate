@@ -1,12 +1,14 @@
 package managedBean;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -14,8 +16,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FilesUploadEvent;
 import org.primefaces.model.charts.ChartData;
@@ -34,6 +38,7 @@ import com.google.gson.Gson;
 
 import dao.DaoEmail;
 import dao.DaoUsuario;
+import datatablelazy.LazyDataTableModelUserPessoa;
 import model.EmailUser;
 import model.UsuarioPessoa;
 
@@ -42,7 +47,11 @@ import model.UsuarioPessoa;
 public class UsuarioPessoaManagedBean {
 
 	private UsuarioPessoa usuarioPessoa = new UsuarioPessoa();
-	private List<UsuarioPessoa> list = new ArrayList<UsuarioPessoa>();
+	/*Devolve lista paginada de usuários com lazy*/
+	private LazyDataTableModelUserPessoa<UsuarioPessoa> list = new LazyDataTableModelUserPessoa<UsuarioPessoa>();
+	
+	/*Devolve lista completa de usuários*/
+	//private List<UsuarioPessoa> list = new ArrayList<UsuarioPessoa>();
 	private DaoUsuario<UsuarioPessoa> daoGenerico = new DaoUsuario<UsuarioPessoa>();
 	private EmailUser emailUser = new EmailUser();
 	private DaoEmail<EmailUser> daoEmail = new DaoEmail<EmailUser>();
@@ -53,13 +62,14 @@ public class UsuarioPessoaManagedBean {
 
 	@PostConstruct
 	public void init() {
-		list = daoGenerico.listar(UsuarioPessoa.class);
+		//list = daoGenerico.listar(UsuarioPessoa.class);
+		list.load(0, 5, null, null);
 		createBarModel();
 
 	}
 	
-	public void serachUser() {
-		list = daoGenerico.searchUser(campoPesquisa);
+	public void searchUser() {
+		list.searchUser(campoPesquisa);
 		createBarModel();
 	}
 	
@@ -74,7 +84,7 @@ public class UsuarioPessoaManagedBean {
 		List<String> borderColor = new ArrayList<>();
 
 		
-		for (UsuarioPessoa usuarioPessoa : list) {
+		for (UsuarioPessoa usuarioPessoa : list.list) {
 
 
 			values.add(usuarioPessoa.getSalario());
@@ -200,7 +210,7 @@ public class UsuarioPessoaManagedBean {
 
 	public String salvar() {
 		daoGenerico.salvar(usuarioPessoa);
-		list.add(usuarioPessoa);
+		list.list.add(usuarioPessoa);
 		usuarioPessoa = new UsuarioPessoa();
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "informação: ", "Salvao com sucesso!"));
@@ -239,14 +249,15 @@ public class UsuarioPessoaManagedBean {
 		return "";
 	}
 
-	public List<UsuarioPessoa> getList() {
+	public LazyDataTableModelUserPessoa<UsuarioPessoa> getList() {
+		createBarModel();
 		return list;
 	}
 
 	public String delete() {
 		try {
 			daoGenerico.removerUsuario(usuarioPessoa);
-			list.remove(usuarioPessoa);
+			list.list.remove(usuarioPessoa);
 			usuarioPessoa = new UsuarioPessoa();
 			init();
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -276,5 +287,24 @@ public class UsuarioPessoaManagedBean {
 		String imagem = "data:image/png;base64," + DatatypeConverter.printBase64Binary(image.getFile().getContent());
 		
 		usuarioPessoa.setImage(imagem);
+	}
+	
+	public void downLoad() throws IOException {
+		
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		
+		String fileDownLoadId = params.get("fileDownLoadId");
+		
+		UsuarioPessoa pessoa = daoGenerico.pesquisar(Long.parseLong(fileDownLoadId), UsuarioPessoa.class);
+		
+		byte[] imagem = new Base64().decode(pessoa.getImage().split("\\,")[1]);
+		
+		HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		
+		response.addHeader("Content-Disposition", "attachment; filename="+pessoa.getNome()+".png");
+		response.setContentType("application/octet-stream");
+		response.setContentLength(imagem.length);
+		response.getOutputStream().write(imagem);
+		FacesContext.getCurrentInstance().responseComplete();
 	}
 }

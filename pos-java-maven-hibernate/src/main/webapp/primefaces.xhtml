@@ -78,7 +78,7 @@
 			<p:fileUpload mode="advanced" label="Adicionar" auto="true" update="imageUser" listener="#{usuarioPessoaManagedBean.upload}"/>
 			
 			<h:outputLabel value="Imagem:" />
-			<h:graphicImage value="#{usuarioPessoaManagedBean.usuarioPessoa.image}" id="imageUser" width="100" height="100" />
+			<h:graphicImage value="#{usuarioPessoaManagedBean.usuarioPessoa.image}" id="imageUser" width="150" height="150" style="border-radius:100%;" />
 
 		</h:panelGrid>
 		<br/>
@@ -97,7 +97,7 @@
 			<h:panelGrid columns="3">
 				<p:outputLabel value="Nome: " />
 				<p:inputText value="#{usuarioPessoaManagedBean.campoPesquisa}" />
-				<p:commandButton value="Buscar" actionListener="#{usuarioPessoaManagedBean.serachUser()}" update="formTable, :chart"/>
+				<p:commandButton value="Buscar" actionListener="#{usuarioPessoaManagedBean.searchUser()}" update="formTable, :chart"/>
 			</h:panelGrid>
 		</p:panel>
 	</h:form>
@@ -105,13 +105,22 @@
 	<br/>
 	<h:form id="formTable">
 		<p:dataTable id="tableUser"  var="user" value="#{usuarioPessoaManagedBean.list}" rowKey="#{user.id}"
-			cellpadding="10" border="1" cellspacing="0" style="width:100%;">
+			cellpadding="10" border="1" cellspacing="0" style="width:100%;" rows="5" paginator="true" lazy="true"
+			paginatorPosition="bottom"
+			paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" >
+			
 			<f:facet name="header">Lista de Usuários</f:facet>
 			<p:column headerText="ID">
 				<h:outputText value="#{user.id}" />
 			</p:column>
 			<p:column headerText="Nome" width="50%;">
 				<h:outputText value="#{user.nome}" />
+			</p:column>
+			<p:column headerText="Baixar">
+				<h:commandLink immediate="true" id="botaobaixar" actionListener="#{usuarioPessoaManagedBean.downLoad()}">
+					<f:param name="fileDownLoadId" value="#{user.id}"/>
+					<h:graphicImage value="#{user.image}" width="50" height="50" style="border-radius:100%;" />
+				</h:commandLink>
 			</p:column>
 			<p:column headerText="Ações" style="width: 130px; display:flex; gap: 5px;">
 				<center>
